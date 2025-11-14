@@ -17,10 +17,14 @@ set(CMAKE_AUTOUIC ON)
 set(SOURCES
     main.cpp
     MainWindow.cpp
+    Canvas.cpp
+    Entity.cpp
 )
 
 set(HEADERS
     MainWindow.h
+    Canvas.h
+    Entity.h
 )
 
 # Create executable
