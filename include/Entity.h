@@ -5,6 +5,7 @@
 #include <QRect>
 #include <QString>
 #include <QColor>
+#include <QJsonObject>
 
 class Entity
 {
@@ -23,7 +24,12 @@ public:
     void setPosition(const QPoint &pos);
     void setName(const QString &name);
     void setColor(const QColor &color);
+    void setSize(int width, int height);
     
+    // JSON serialization
+    QJsonObject toJson() const;
+    static Entity fromJson(const QJsonObject &json);
+
 private:
     int m_id;                    // Unique identifier
     QString m_name;              // Display name

@@ -7,6 +7,9 @@
 #include <vector>
 #include "Entity.h"
 
+class QUndoStack;  // Forward declaration
+class MoveEntityCommand;  // Forward declaration
+
 class Canvas : public QWidget
 {
     Q_OBJECT
@@ -22,6 +25,29 @@ public:
     
     // Set selection from external source (like the list widget)
     void setSelectedEntityIndex(int index);
+    
+    // Save/Load functionality
+    bool saveToFile(const QString &filePath) const;
+    bool loadFromFile(const QString &filePath);
+
+    // Grid controls
+    void setGridVisible(bool visible);
+    bool isGridVisible() const { return m_gridVisible; }
+    void setGridSize(int size);
+    int gridSize() const { return m_gridSize; }   
+    
+    // Snap-to-grid controls
+    void setSnapToGrid(bool snap);
+    bool isSnapToGrid() const { return m_snapToGrid; }
+
+    // Undo/Redo support methods
+    int addEntityAt(const QPoint &position);  // Returns index of added entity
+    void removeEntityAt(int index);
+    int insertEntity(const Entity &entity, int index);  // Returns index where inserted
+    void setUndoStack(QUndoStack *undoStack);
+
+    // Duplication
+    void duplicateSelectedEntity();  // Duplicate the currently selected entity
 
 signals:
     // Signals emitted when entities change (for updating the list)
@@ -33,6 +59,19 @@ private:
     
     // Background color for the canvas
     QColor m_backgroundColor;
+
+    // Grid settings
+    bool m_gridVisible;   // Whether grid is visible
+    int m_gridSize;       // Grid size in pixels   
+    
+    // Snap-to-grid settings
+    bool m_snapToGrid;    // Whether to snap to grid
+
+    // Undo stack reference
+    QUndoStack *m_undoStack;  // Pointer to undo stack (for commands)
+
+    // Move command tracking (for undo/redo)
+    MoveEntityCommand *m_currentMoveCommand; 
     
     // Container to store all entities on the canvas
     std::vector<Entity> m_entities;
@@ -51,6 +90,9 @@ private:
     // Helper function to find entity at a given point
     // Returns index in m_entities, or -1 if none found
     int findEntityAt(const QPoint &pos) const;
+
+    // Helper function to snap a point to the nearest grid point
+    QPoint snapToGrid(const QPoint &point) const;
     
     // Delete the currently selected entity
     void deleteSelectedEntity();    

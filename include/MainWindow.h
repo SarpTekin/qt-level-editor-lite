@@ -2,10 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QUndoStack> 
 
 class QDockWidget;
 class QListWidget;
 class Canvas;
+class InspectorPanel;
 
 class MainWindow : public QMainWindow
 {
@@ -24,6 +26,14 @@ private slots:
     void onEntityRemoved(int index);
     void onEntitySelectionChanged(int index);
 
+    // File menu actions
+    void onSaveScene();
+    void onLoadScene();   
+       
+    // View menu actions
+    void toggleGridVisibility();
+    void toggleSnapToGrid();
+
 private:
     void setupObjectListPanel();
     void updateObjectList();
@@ -31,6 +41,9 @@ private:
     Canvas *m_canvas;
     QDockWidget *m_objectListDock;
     QListWidget *m_objectListWidget;
+    InspectorPanel *m_inspectorPanel;  
+    QDockWidget *m_inspectorDock;     
+    QUndoStack *m_undoStack; 
 };
 
 #endif // MAINWINDOW_H
